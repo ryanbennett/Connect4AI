@@ -7,16 +7,22 @@ namespace Connect4AI
 {
     public class Board
     {
+
+        public string Name { get; set; }
+
+        public Board()
+        {
+
+        }
+
         public Board(int cols = 7, int rows = 6)
         {
             _matrix =  new int[rows,cols];
-            MAX_COL_INDEX = cols - 1;
-            MAX_ROW_INDEX = rows - 1;
         }
 
         private int[,] _matrix;
-        public readonly int MAX_ROW_INDEX;
-        public readonly int MAX_COL_INDEX;
+        public int MAX_ROW_INDEX { get { return _matrix.GetLength(0) - 1; } }
+        public int MAX_COL_INDEX { get { return _matrix.GetLength(1) - 1; } }
 
         public int[,] Matrix { get => _matrix; set => _matrix = value; }
 

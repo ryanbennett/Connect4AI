@@ -25,14 +25,14 @@ namespace Connect4AI
             return true;
         }
 
-        public bool PlayerWins(int player, Board board)
+        public List<Group> PlayerWins(int player, Board board)
         {
 
             var boardSearch = new BoardSearch(NumToWin);
 
             var results = boardSearch.FindGroups(player, board, false);
           
-            return results.Any();
+            return results;
         }
 
 

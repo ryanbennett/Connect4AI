@@ -1,6 +1,7 @@
 ﻿using GameGenerator;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Connect4AI.Game
@@ -23,7 +24,7 @@ namespace Connect4AI.Game
         private int PlayerTurn = 1;
         private Player2Strategy player2 = new Player2Strategy();
 
-        public void Play()
+        public bool Play()
         {
 
             DrawBoard();
@@ -41,12 +42,32 @@ namespace Connect4AI.Game
                 if (!int.TryParse(keyString, out column))
                 {
 
+                    if(key.Key == ConsoleKey.S)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Enter Name to Save: ");
+                        var name = Console.ReadLine();
+                        board.Name = name;
+                        BoardJson.Serialize(board);
+                        return true;
+                    }
+
+                    if (key.Key == ConsoleKey.L)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Enter Name to Load: ");
+                        var name = Console.ReadLine();
+                        board.Name = name;
+                        board = BoardJson.Deserialize(name);
+                        return true;
+                    }
+
+
                     Console.BackgroundColor = ConsoleColor.Red;
                     Console.WriteLine();
                     Console.WriteLine($"Invalid column. Press any key");
                     Console.ReadLine();
-                    DrawBoard();
-                    Play();
+                    return true;
                 }
                 column = column - 1;
 
@@ -61,7 +82,8 @@ namespace Connect4AI.Game
             {
                 board.DropChecker(column, PlayerTurn);
 
-                if (rules.PlayerWins(PlayerTurn, board))
+                var winningGroups = rules.PlayerWins(PlayerTurn, board);
+                if (winningGroups.Any())
                 {
                     Console.WriteLine();
                     Console.WriteLine();
@@ -69,6 +91,7 @@ namespace Connect4AI.Game
                     DrawBoard();
                     Console.WriteLine($"Player {PlayerTurn} wins!");
                     Console.ReadLine();
+                    return false;
                 }
             }
             else
@@ -77,13 +100,12 @@ namespace Connect4AI.Game
                 Console.WriteLine();
                 Console.WriteLine($"Invalid move. Press any key");
                 Console.ReadLine();
-                DrawBoard();
-                Play();
+                return true;
             }
             
 
             PlayerTurn = PlayerTurn == 1 ? 2 : 1;
-            Play();  
+            return true;  
         }
 
         private void DrawBoard()

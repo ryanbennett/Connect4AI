@@ -7,7 +7,11 @@ namespace Connect4AI.Game
         static void Main(string[] args)
         {
             var game = new Game();
-            game.Play();
+            var result = game.Play();
+            while (result)
+            {
+                result = game.Play();
+            }
         }
     }
 }

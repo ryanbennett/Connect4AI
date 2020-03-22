@@ -41,7 +41,7 @@ namespace Connect4AI
 
             foreach(var move in legalMoves)
             {
-                if(move.Col % 2 != 0 && move.Row + 1 <= board.MAX_ROW_INDEX) //legal move is odd row and has at least one more play above it
+                if(move.Col % 2 != 0 && move.Row <= board.MAX_ROW_INDEX) //legal move is odd row and has at least one more play above it
                 {
                     claimEvenPlays.Add(move.Col);
                 }
@@ -55,11 +55,11 @@ namespace Connect4AI
         {
             var results = new List<Position>();
 
-            for(var row =0; row<board.MAX_ROW_INDEX; row++)
+            for(var row =0; row<=board.MAX_ROW_INDEX; row++)
             {
                 var rowArray = board.GetRow(row);
 
-                for(var col=0; col<board.MAX_COL_INDEX; col++)
+                for(var col=0; col<=board.MAX_COL_INDEX; col++)
                 {
                     var r = rowArray[col];
                     if( r == 0 && !results.Any(t => t.Col == col))
@@ -72,16 +72,17 @@ namespace Connect4AI
             return results;
         }
 
+
         private List<Group> HorizontalSearch(int player, Board board, bool searchForThreats)
         {
             var results = new List<Group>();
-            for (int row = 0; row < board.MAX_ROW_INDEX; row++)
+            for (int row = 0; row <= board.MAX_ROW_INDEX; row++)
             {
                 var count = 0;
                 var threat = new Group();
 
                 var blanksAllowed = searchForThreats;
-                for (int col = 0; col < board.MAX_COL_INDEX; col++)
+                for (int col = 0; col <= board.MAX_COL_INDEX; col++)
                 {
                     var mark = board[row, col];
                     if(mark == 0 && blanksAllowed)
@@ -98,6 +99,7 @@ namespace Connect4AI
                     else
                     {
                         count = 0;
+                        blanksAllowed = searchForThreats;
                         threat = new Group();
                     }
 
@@ -114,13 +116,13 @@ namespace Connect4AI
         private List<Group> VerticalSearch(int player, Board board, bool searchForThreats)
         {
              var results = new List<Group>();
-            for (int col = 0; col < board.MAX_COL_INDEX; col++)
+            for (int col = 0; col <= board.MAX_COL_INDEX; col++)
             {
                 var count = 0;
                 var group = new Group();
 
                 var blanksAllowed = searchForThreats;
-                for (int row = 0; row < board.MAX_ROW_INDEX; row++)
+                for (int row = 0; row <= board.MAX_ROW_INDEX; row++)
                 {
                     var mark = board[row, col];
                     if (mark == 0 && blanksAllowed)
@@ -137,6 +139,7 @@ namespace Connect4AI
                     else
                     {
                         count = 0;
+                        blanksAllowed = searchForThreats;
                         group = new Group();
                     }
 
@@ -158,7 +161,7 @@ namespace Connect4AI
                 var count = 0;
                 var group = new Group();
                 var blanksAllowed = searchForThreats;
-                for (int row = 0; row <= board.MAX_ROW_INDEX; row++)
+                for (int row = board.MAX_ROW_INDEX; row >=0 ; row--)
                 {
                     var mark = board[row, col];
                     if (mark == player || (mark == 0 && blanksAllowed))
@@ -180,14 +183,23 @@ namespace Connect4AI
                             if (tempCol > board.MAX_COL_INDEX || tempRow < 0)
                             {
                                 count = 0;
+                                blanksAllowed = searchForThreats;
                                 group = new Group();
                                 break;
                             }
 
-                            if (board[tempRow, tempCol] == player)
+                            var tempMark = board[tempRow, tempCol];
+                            if (tempMark == player || (blanksAllowed && tempMark == 0))
                             {
-                                group.Coords.Add(new Position(row, col, mark));
+                                group.Coords.Add(new Position(tempRow, tempCol, tempMark));
                                 count++;
+                            }
+                            else
+                            {
+                                count = 0;
+                                blanksAllowed = searchForThreats;
+                                group = new Group();
+
                             }
 
                             if (count == NumToWin)
@@ -201,6 +213,7 @@ namespace Connect4AI
                     else
                     {
                         count = 0;
+                        blanksAllowed = searchForThreats;
                         group = new Group();
                     }
 
@@ -224,7 +237,7 @@ namespace Connect4AI
                 var count = 0;
                 var group = new Group();
                 var blanksAllowed = searchForThreats;
-                for (int row = 0; row <= board.MAX_ROW_INDEX; row++)
+                for (int row = board.MAX_ROW_INDEX; row >= 0 ; row--)
                 {
                     var mark = board[row, col];
                     if (mark == player || (mark == 0 && blanksAllowed))
@@ -245,16 +258,25 @@ namespace Connect4AI
                             if (tempCol < 0 || tempRow < 0)
                             {
                                 count = 0;
+                                blanksAllowed = searchForThreats;
                                 group = new Group();
                                 break;
                             }
 
-                            if (board[tempRow, tempCol] == player)
+                            var tempMark = board[tempRow, tempCol];
+                            if (tempMark == player || (blanksAllowed && tempMark == 0))
                             {
-                                group.Coords.Add(new Position(row, col, mark));
+                                group.Coords.Add(new Position(tempRow, tempCol, tempMark));
                                 count++;
                             }
-
+                            else
+                            {
+                                count = 0;
+                                blanksAllowed = searchForThreats;
+                                group = new Group();
+                                break;
+                            }
+                            
                             if (count == NumToWin)
                             {
                                 results.Add(group);
@@ -264,6 +286,8 @@ namespace Connect4AI
                     else
                     {
                         count = 0;
+                        blanksAllowed = searchForThreats;
+                        group = new Group();
                     }
 
                     if (count == NumToWin)
