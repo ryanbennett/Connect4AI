@@ -8,11 +8,11 @@ public class Group
     public int Player { get; set; }
 
 
-    public List<Position> Coords { get; set; } = new List<Position>(4);
+    public List<Position> Coords { get; set; } = new List<Position>();
 
     public bool IsWinner()
     {
-        return !Coords.Any(t => t.Item3 == 0);
+        return !Coords.Any(t => t.Mark == 0);
     }
 
 }

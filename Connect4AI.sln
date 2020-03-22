@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connect4AI", "Connect4AI\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameGenerator", "GameGenerator\GameGenerator.csproj", "{46D7B5E0-1CBD-444E-8886-F7647849162C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connect4AI.Game", "Connect4AI.Game\Connect4AI.Game.csproj", "{CE2BB57E-6FC0-451C-BA28-931A49C050DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{46D7B5E0-1CBD-444E-8886-F7647849162C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46D7B5E0-1CBD-444E-8886-F7647849162C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46D7B5E0-1CBD-444E-8886-F7647849162C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE2BB57E-6FC0-451C-BA28-931A49C050DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE2BB57E-6FC0-451C-BA28-931A49C050DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE2BB57E-6FC0-451C-BA28-931A49C050DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE2BB57E-6FC0-451C-BA28-931A49C050DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

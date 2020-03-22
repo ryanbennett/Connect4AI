@@ -15,7 +15,7 @@ namespace GameGenerator
             var boardSearch = new BoardSearch(4);
 
             var groups = boardSearch.FindGroups(1, board, true);
-            var hasOddThreat = groups.Select(g => g.Coords.Any(t => t.Item1 % 2 != 0)).Any();
+            var hasOddThreat = groups.Select(g => g.Coords.Any(t => t.Row % 2 != 0)).Any();
 
             return hasOddThreat;
 

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using GameGenerator;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Connect4AI
+namespace Connect4AI.Game
 {
     public class Game
     {
@@ -20,57 +21,66 @@ namespace Connect4AI
         private const string LeftSideBuffer = "          ";
 
         private int PlayerTurn = 1;
+        private Player2Strategy player2 = new Player2Strategy();
 
         public void Play()
         {
 
             DrawBoard();
-            var promptColor = PlayerTurn == 1 ? ConsoleColor.Blue : PlayerTurn == 2 ? ConsoleColor.Red : ConsoleColor.White;
-            Console.ForegroundColor = promptColor;
-            Console.Write($"Select a column Player {PlayerTurn}: ");
-            Console.ResetColor();
-            var key = Console.ReadKey();
-
             int column = -1;
 
-            var keyString = key.KeyChar.ToString();
-            if (int.TryParse(keyString, out column))
+            if (PlayerTurn == 1)
             {
-                column = column - 1;
-                if (rules.IsValidMove(column, board))
-                {
-                    board.DropChecker(column, PlayerTurn);
+                var promptColor = ConsoleColor.Blue ;
+                Console.ForegroundColor = promptColor;
+                Console.Write($"Select a column Player {PlayerTurn}: ");
+                Console.ResetColor();
 
-                    if (rules.PlayerWins(PlayerTurn, board))
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine();
-                        Console.BackgroundColor = ConsoleColor.Green;
-                        DrawBoard();
-                        Console.WriteLine($"Player {PlayerTurn} wins!");
-                        Console.ReadLine();
-                    }
-                }
-                else
+                var key = Console.ReadKey();
+                var keyString = key.KeyChar.ToString();
+                if (!int.TryParse(keyString, out column))
                 {
+
                     Console.BackgroundColor = ConsoleColor.Red;
                     Console.WriteLine();
-                    Console.WriteLine($"Invalid move. Press any key");
+                    Console.WriteLine($"Invalid column. Press any key");
                     Console.ReadLine();
                     DrawBoard();
                     Play();
                 }
+                column = column - 1;
+
             }
             else
             {
+                column = player2.Run(board, 4);
+            }
+         
+           
+            if (rules.IsValidMove(column, board))
+            {
+                board.DropChecker(column, PlayerTurn);
 
+                if (rules.PlayerWins(PlayerTurn, board))
+                {
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.BackgroundColor = ConsoleColor.Green;
+                    DrawBoard();
+                    Console.WriteLine($"Player {PlayerTurn} wins!");
+                    Console.ReadLine();
+                }
+            }
+            else
+            {
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.WriteLine();
-                Console.WriteLine($"Invalid column. Press any key");
+                Console.WriteLine($"Invalid move. Press any key");
                 Console.ReadLine();
                 DrawBoard();
                 Play();
             }
+            
 
             PlayerTurn = PlayerTurn == 1 ? 2 : 1;
             Play();  
@@ -104,9 +114,9 @@ namespace Connect4AI
                 Console.Write("|\n");
             }
             Console.Write(LeftSideBuffer);
-            Console.Write("_________________________________\n");
+            Console.Write("____________________________\n");
             Console.Write(LeftSideBuffer);
-            Console.Write("  1   2   3   4   5   6   7   8\n");
+            Console.Write("  1   2   3   4   5   6   7\n");
             Console.WriteLine();
             Console.WriteLine();
         }

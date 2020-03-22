@@ -7,11 +7,11 @@ namespace Connect4AI
 {
     public class Board
     {
-        public Board(int cols = 8, int rows = 8)
+        public Board(int cols = 7, int rows = 6)
         {
-            _matrix =  new int[cols, rows];
+            _matrix =  new int[rows,cols];
             MAX_COL_INDEX = cols - 1;
-            MAX_ROW_INDEX = cols - 1;
+            MAX_ROW_INDEX = rows - 1;
         }
 
         private int[,] _matrix;

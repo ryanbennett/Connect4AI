@@ -86,15 +86,14 @@ namespace Connect4AI
                     var mark = board[row, col];
                     if(mark == 0 && blanksAllowed)
                     {
-                        threat.Coords[count] = new Position(row, col, mark);
+                        threat.Coords.Add( new Position(row, col, mark));
                         blanksAllowed = false;
                         count++;
                     }
                     else if (mark == player)
                     {
-                        threat.Coords[count] = new Position(row, col, mark);  
+                        threat.Coords.Add(new Position(row, col, mark));  
                         count++;
-                        
                     }
                     else
                     {
@@ -126,15 +125,14 @@ namespace Connect4AI
                     var mark = board[row, col];
                     if (mark == 0 && blanksAllowed)
                     {
-                        group.Coords[count] = new Position(row, col, mark);
+                        group.Coords.Add(new Position(row, col, mark));
                         blanksAllowed = false;
                         count++;
                     }
                     else if (mark == player)
                     {
-                        group.Coords[count] = new Position(row, col, mark);
+                        group.Coords.Add(new Position(row, col, mark));
                         count++;
-
                     }
                     else
                     {
@@ -167,7 +165,7 @@ namespace Connect4AI
                     {
                         if (mark == 0) blanksAllowed = false;
 
-                        group.Coords[count] = new Position(row,col,mark);
+                        group.Coords.Add(new Position(row,col,mark));
                         count++;
 
                         var tempRow = row;
@@ -188,7 +186,7 @@ namespace Connect4AI
 
                             if (board[tempRow, tempCol] == player)
                             {
-                                group.Coords[count] = new Position(row, col, mark);
+                                group.Coords.Add(new Position(row, col, mark));
                                 count++;
                             }
 
@@ -218,7 +216,7 @@ namespace Connect4AI
 
    
 
-        private List<Group> LeftHandDiagonalSearch(int player, Board board, bool searchForThreats)
+        private List<Group> LeftHandDiagonalSearch(int player, Board board, bool searchForThreats = false)
         {
             var results = new List<Group>();
             for (int col = board.MAX_COL_INDEX; col >= 0; col--)
@@ -233,7 +231,7 @@ namespace Connect4AI
                     {
                         if (mark == 0) blanksAllowed = false;
 
-                        group.Coords[count] = new Position(row, col, mark);
+                        group.Coords.Add(new Position(row, col, mark));
                         count++;
 
                         var tempRow = row;
@@ -253,7 +251,7 @@ namespace Connect4AI
 
                             if (board[tempRow, tempCol] == player)
                             {
-                                group.Coords[count] = new Position(row, col, mark);
+                                group.Coords.Add(new Position(row, col, mark));
                                 count++;
                             }
 
