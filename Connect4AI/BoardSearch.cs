@@ -50,6 +50,7 @@ namespace Connect4AI
             return claimEvenPlays;
         }
 
+
         public List<Position> FindAllLegalMoves(Board board)
         {
             var results = new List<Position>();

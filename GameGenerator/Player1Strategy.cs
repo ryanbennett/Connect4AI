@@ -9,6 +9,8 @@ namespace GameGenerator
     public class Player2Strategy
     {
 
+        private Random random = new Random();
+
         private const int PLAYERNUM = 2;
         public int Run(Board board, int numToWin)
         {
@@ -30,16 +32,26 @@ namespace GameGenerator
             columnToPlay = MatchThreatsWithLegal(oppThreats, legalMoves);
             if (columnToPlay.HasValue) return columnToPlay.Value;
 
-            
+
             //claimeven
+            var claimevens = search.FindPossibleClaimEvens(board);
+            foreach(var claimEven in claimevens)
+            {
+                foreach(var move in legalMoves)
+                {
+                    if (claimEven == move.Col)
+                    {
+                        return claimEven;
+                    }
+                }
+            }
 
-
-            //lowinverse
-
-
-
+            var moveIndex = random.Next(0, legalMoves.Count());
+            return legalMoves[moveIndex].Col;
 
         }
+
+        
 
         private int? MatchThreatsWithLegal(List<Group> threats, List<Position> legalMoves)
         {
@@ -48,7 +60,7 @@ namespace GameGenerator
                 var blank = threat.Coords.First(t => t.Mark == 0);
                 foreach (var move in legalMoves)
                 {
-                    if (blank.Row == move.Row && blank.Col == move.Col)
+                    if (blank.Equals(move))
                     {
                         //this is a win.
                         return move.Col;

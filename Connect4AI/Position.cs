@@ -19,5 +19,10 @@ namespace Connect4AI
         public int Col { get;  }
 
         public int Mark { get; set; }
+
+        public bool Equals(Position pos)
+        {
+            return pos.Row == Row && pos.Col == Col;
+        }
     }
 }
