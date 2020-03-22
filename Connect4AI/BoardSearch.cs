@@ -32,9 +32,27 @@ namespace Connect4AI
 
         }
 
-        public List<Tuple<int,int>> FindAllLegalMoves(Board board)
+        public List<int> FindPossibleClaimEvens(Board board)
         {
-            var results = new List<Tuple<int, int>>();
+            var claimEvenPlays = new List<int>();
+
+            //Required: Two squares, directly above each other. Both squares should be empty. The upper square must be even
+            var legalMoves = FindAllLegalMoves(board);
+
+            foreach(var move in legalMoves)
+            {
+                if(move.Col % 2 != 0 && move.Row + 1 <= board.MAX_ROW_INDEX) //legal move is odd row and has at least one more play above it
+                {
+                    claimEvenPlays.Add(move.Col);
+                }
+            }
+
+            return claimEvenPlays;
+        }
+
+        public List<Position> FindAllLegalMoves(Board board)
+        {
+            var results = new List<Position>();
 
             for(var row =0; row<board.MAX_ROW_INDEX; row++)
             {
@@ -43,9 +61,9 @@ namespace Connect4AI
                 for(var col=0; col<board.MAX_COL_INDEX; col++)
                 {
                     var r = rowArray[col];
-                    if( r == 0 && !results.Any(t => t.Item2 == col))
+                    if( r == 0 && !results.Any(t => t.Col == col))
                     {
-                        results.Add(new Tuple<int, int>(row, col));
+                        results.Add(new Position(row, col,r));
                     }
                 }
             }
@@ -67,13 +85,13 @@ namespace Connect4AI
                     var mark = board[row, col];
                     if(mark == 0 && blanksAllowed)
                     {
-                        threat.Coords[count] = new Tuple<int, int, int>(row, col, mark);
+                        threat.Coords[count] = new Position(row, col, mark);
                         blanksAllowed = false;
                         count++;
                     }
                     else if (mark == player)
                     {
-                        threat.Coords[count] = new Tuple<int, int, int>(row, col, mark);  
+                        threat.Coords[count] = new Position(row, col, mark);  
                         count++;
                         
                     }
@@ -107,13 +125,13 @@ namespace Connect4AI
                     var mark = board[row, col];
                     if (mark == 0 && blanksAllowed)
                     {
-                        group.Coords[count] = new Tuple<int, int, int>(row, col, mark);
+                        group.Coords[count] = new Position(row, col, mark);
                         blanksAllowed = false;
                         count++;
                     }
                     else if (mark == player)
                     {
-                        group.Coords[count] = new Tuple<int, int, int>(row, col, mark);
+                        group.Coords[count] = new Position(row, col, mark);
                         count++;
 
                     }
@@ -148,7 +166,7 @@ namespace Connect4AI
                     {
                         if (mark == 0) blanksAllowed = false;
 
-                        group.Coords[count] = new Tuple<int, int, int>(row,col,mark);
+                        group.Coords[count] = new Position(row,col,mark);
                         count++;
 
                         var tempRow = row;
@@ -169,7 +187,7 @@ namespace Connect4AI
 
                             if (board[tempRow, tempCol] == player)
                             {
-                                group.Coords[count] = new Tuple<int, int, int>(row, col, mark);
+                                group.Coords[count] = new Position(row, col, mark);
                                 count++;
                             }
 
@@ -214,7 +232,7 @@ namespace Connect4AI
                     {
                         if (mark == 0) blanksAllowed = false;
 
-                        group.Coords[count] = new Tuple<int, int, int>(row, col, mark);
+                        group.Coords[count] = new Position(row, col, mark);
                         count++;
 
                         var tempRow = row;
@@ -234,7 +252,7 @@ namespace Connect4AI
 
                             if (board[tempRow, tempCol] == player)
                             {
-                                group.Coords[count] = new Tuple<int, int, int>(row, col, mark);
+                                group.Coords[count] = new Position(row, col, mark);
                                 count++;
                             }
 

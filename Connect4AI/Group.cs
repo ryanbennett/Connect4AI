@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Connect4AI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +8,7 @@ public class Group
     public int Player { get; set; }
 
 
-    public List<Tuple<int, int, int>> Coords { get; set; } = new List<Tuple<int, int, int>>(4);
+    public List<Position> Coords { get; set; } = new List<Position>(4);
 
     public bool IsWinner()
     {

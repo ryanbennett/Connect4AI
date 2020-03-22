@@ -8,7 +8,7 @@ namespace GameGenerator
 {
     public class ZugzwangDetector
     {
-        public bool DoesPlayerHaveZugzwang(int player, Board board)
+        public bool DoesPlayer1HaveZugzwang(Board board)
         {
 
             //find threats, label even or odd
@@ -17,15 +17,8 @@ namespace GameGenerator
             var groups = boardSearch.FindGroups(1, board, true);
             var hasOddThreat = groups.Select(g => g.Coords.Any(t => t.Item1 % 2 != 0)).Any();
 
+            return hasOddThreat;
 
-            if (player == 1)
-            {
-                return hasOddThreat;
-            }
-            else
-            {
-                return !hasOddThreat;
-            }
 
         }
 

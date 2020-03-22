@@ -6,7 +6,7 @@ namespace Connect4AI
 {
     public class Game
     {
-        private readonly int numberOfPlayers;
+
         private Board board;
         private Rules rules;
 
