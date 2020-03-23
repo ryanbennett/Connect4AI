@@ -12,6 +12,8 @@ namespace Connect4AI.Game
         private Board board;
         private Rules rules;
 
+        public GameLog log = new GameLog();
+
         public Game(int numberOfColumns = 7, int numberOfRows = 6, int numberToWin = 4)
         {
             this.board = new Board(numberOfColumns, numberOfRows);
@@ -26,9 +28,14 @@ namespace Connect4AI.Game
 
         public bool Play()
         {
+            var logEntry = new GameLogEntry();
+            logEntry.BoardBeforeMove = (int[,])board.Matrix.Clone();
+            logEntry.PlayerNumber = PlayerTurn;
 
             DrawBoard();
+
             int column = -1;
+
 
             if (PlayerTurn == 1)
             {
@@ -70,17 +77,20 @@ namespace Connect4AI.Game
                     return true;
                 }
                 column = column - 1;
-
+         
             }
             else
             {
                 column = player2.Run(board, 4);
+                
             }
          
            
             if (rules.IsValidMove(column, board))
             {
                 board.DropChecker(column, PlayerTurn);
+                logEntry.ColumnPlayed = column;
+                log.Add(logEntry);
 
                 var winningGroups = rules.PlayerWins(PlayerTurn, board);
                 if (winningGroups.Any())

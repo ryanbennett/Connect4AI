@@ -30,7 +30,7 @@ namespace Connect4AI
 
             var boardSearch = new BoardSearch(NumToWin);
 
-            var results = boardSearch.FindGroups(player, board, false);
+            var results = boardSearch.FindGroups(player, board, 0);
           
             return results;
         }

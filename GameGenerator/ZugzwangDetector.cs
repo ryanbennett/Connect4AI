@@ -14,7 +14,7 @@ namespace GameGenerator
             //find threats, label even or odd
             var boardSearch = new BoardSearch(4);
 
-            var groups = boardSearch.FindGroups(1, board, true);
+            var groups = boardSearch.FindGroups(1, board, 1);
             var hasOddThreat = groups.Select(g => g.Coords.Any(t => t.Row % 2 != 0)).Any();
 
             return hasOddThreat;

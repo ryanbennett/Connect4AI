@@ -56,12 +56,26 @@ namespace GameGenerator
 
             //are any blanks legal moves?
             columnToPlay = MatchPositionsThreatsWithLegal(forkPositions, legalMoves);
+            if (columnToPlay.HasValue) return columnToPlay.Value;
 
-            //can you create a fork?
-            //look for threats with 2 blanks
-            //do any threats share a blank?
-            //can it be played?
-            //should we remove a legal move if we can to force player 1 to play the step up?
+            //should we remove a legal move if it will harm us?
+            //can player1 score after this move?
+            //take all legal moves and transpose one row up - do any fulfill player 1 threats?
+            var toRemove = new List<Position>();
+            foreach(var legalMove in legalMoves)
+            {
+                var transposedMove = new Position(legalMove.Row + 1, legalMove.Col, 0);
+                foreach(var threat in oppThreats)
+                {
+                    var blank = threat.Coords.Single(t => t.Mark == 0);
+                    if (blank.Equals(transposedMove))
+                    {
+                        toRemove.Add(legalMove);
+                    }
+                }
+            }
+
+            toRemove.ForEach(r => legalMoves.Remove(r));
 
             //claimeven
             var claimevens = search.FindPossibleClaimEvens(board);

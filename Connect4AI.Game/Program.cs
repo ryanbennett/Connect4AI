@@ -12,6 +12,9 @@ namespace Connect4AI.Game
             {
                 result = game.Play();
             }
+
+            game.log.Save();
+            
         }
     }
 }
