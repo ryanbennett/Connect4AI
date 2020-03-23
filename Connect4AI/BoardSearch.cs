@@ -14,18 +14,18 @@ namespace Connect4AI
             NumToWin = numToWin;
         }
 
-        public List<Group> FindGroups(int player, Board board, bool searchForThreats)
+        public List<Group> FindGroups(int player, Board board, int blanksAllowed = 0)
         {
 
-            var result = VerticalSearch(player, board, searchForThreats);
+            var result = VerticalSearch(player, board, blanksAllowed);
 
             //horizontal search
-            result.AddRange(HorizontalSearch(player, board, searchForThreats));
+            result.AddRange(HorizontalSearch(player, board, blanksAllowed));
 
-            result.AddRange(RightHandDiagonalSearch(player, board, searchForThreats));
+            result.AddRange(RightHandDiagonalSearch(player, board, blanksAllowed));
 
             //left hand diagonal
-            result.AddRange(LeftHandDiagonalSearch(player, board, searchForThreats));
+            result.AddRange(LeftHandDiagonalSearch(player, board, blanksAllowed));
 
 
             return result;
@@ -73,7 +73,7 @@ namespace Connect4AI
         }
 
 
-        private List<Group> HorizontalSearch(int player, Board board, bool searchForThreats)
+        private List<Group> HorizontalSearch(int player, Board board, int blanksAllowed = 0)
         {
             var results = new List<Group>();
             for (int row = 0; row <= board.MAX_ROW_INDEX; row++)
@@ -81,14 +81,14 @@ namespace Connect4AI
                 var count = 0;
                 var threat = new Group();
 
-                var blanksAllowed = searchForThreats;
+                var blankCount = 0;
                 for (int col = 0; col <= board.MAX_COL_INDEX; col++)
                 {
                     var mark = board[row, col];
-                    if(mark == 0 && blanksAllowed)
+                    if(mark == 0 && blankCount <= blanksAllowed)
                     {
                         threat.Coords.Add( new Position(row, col, mark));
-                        blanksAllowed = false;
+                        blankCount++;
                         count++;
                     }
                     else if (mark == player)
@@ -99,7 +99,7 @@ namespace Connect4AI
                     else
                     {
                         count = 0;
-                        blanksAllowed = searchForThreats;
+                        blankCount = 0;
                         threat = new Group();
                     }
 
@@ -113,7 +113,7 @@ namespace Connect4AI
             return results;
         }
 
-        private List<Group> VerticalSearch(int player, Board board, bool searchForThreats)
+        private List<Group> VerticalSearch(int player, Board board, int blanksAllowed)
         {
              var results = new List<Group>();
             for (int col = 0; col <= board.MAX_COL_INDEX; col++)
@@ -121,14 +121,14 @@ namespace Connect4AI
                 var count = 0;
                 var group = new Group();
 
-                var blanksAllowed = searchForThreats;
+                var blankCount = 0;
                 for (int row = 0; row <= board.MAX_ROW_INDEX; row++)
                 {
                     var mark = board[row, col];
-                    if (mark == 0 && blanksAllowed)
+                    if (mark == 0 && blankCount <= blanksAllowed)
                     {
                         group.Coords.Add(new Position(row, col, mark));
-                        blanksAllowed = false;
+                        blankCount++;
                         count++;
                     }
                     else if (mark == player)
@@ -139,13 +139,15 @@ namespace Connect4AI
                     else
                     {
                         count = 0;
-                        blanksAllowed = searchForThreats;
+                        blankCount = 0;
                         group = new Group();
                     }
 
                     if (count == NumToWin)
                     {
                         results.Add(group);
+                        
+                        break;
                     }
                 }
             }
@@ -153,20 +155,21 @@ namespace Connect4AI
             return results;
         }
 
-        private List<Group> RightHandDiagonalSearch(int player, Board board, bool searchForThreats)
+        private List<Group> RightHandDiagonalSearch(int player, Board board, int blanksAllowed)
         {
             var results = new List<Group>();
             for (int col = 0; col <= board.MAX_COL_INDEX; col++)
             {
                 var count = 0;
                 var group = new Group();
-                var blanksAllowed = searchForThreats;
+
+                var blankCount = 0;
                 for (int row = board.MAX_ROW_INDEX; row >=0 ; row--)
                 {
                     var mark = board[row, col];
-                    if (mark == player || (mark == 0 && blanksAllowed))
+                    if (mark == player || (mark == 0 && blankCount <= blanksAllowed))
                     {
-                        if (mark == 0) blanksAllowed = false;
+                        if (mark == 0) blankCount++;
 
                         group.Coords.Add(new Position(row,col,mark));
                         count++;
@@ -183,28 +186,38 @@ namespace Connect4AI
                             if (tempCol > board.MAX_COL_INDEX || tempRow < 0)
                             {
                                 count = 0;
-                                blanksAllowed = searchForThreats;
+                                blankCount = 0;
                                 group = new Group();
                                 break;
                             }
 
                             var tempMark = board[tempRow, tempCol];
-                            if (tempMark == player || (blanksAllowed && tempMark == 0))
+                            if (tempMark == player || (blankCount <= blanksAllowed && tempMark == 0))
                             {
                                 group.Coords.Add(new Position(tempRow, tempCol, tempMark));
                                 count++;
+
+                                if(tempMark == 0)
+                                {
+                                    blankCount++;
+                                }
                             }
                             else
                             {
-                                count = 0;
-                                blanksAllowed = searchForThreats;
+                                blankCount = 0 ;
                                 group = new Group();
+                                count = 0;
+                                break;
 
                             }
 
                             if (count == NumToWin)
                             {
                                 results.Add(group);
+                                blankCount = 0;
+                                group = new Group();
+                                count = 0;
+                                break;
                             }
                         }
 
@@ -213,14 +226,10 @@ namespace Connect4AI
                     else
                     {
                         count = 0;
-                        blanksAllowed = searchForThreats;
+                        blankCount = 0;
                         group = new Group();
                     }
 
-                    if (count == NumToWin)
-                    {
-                        results.Add(group);
-                    }
                 }
             }
 
@@ -229,20 +238,20 @@ namespace Connect4AI
 
    
 
-        private List<Group> LeftHandDiagonalSearch(int player, Board board, bool searchForThreats = false)
+        private List<Group> LeftHandDiagonalSearch(int player, Board board, int blanksAllowed)
         {
             var results = new List<Group>();
             for (int col = board.MAX_COL_INDEX; col >= 0; col--)
             {
                 var count = 0;
                 var group = new Group();
-                var blanksAllowed = searchForThreats;
+                var blankCount = 0;
                 for (int row = board.MAX_ROW_INDEX; row >= 0 ; row--)
                 {
                     var mark = board[row, col];
-                    if (mark == player || (mark == 0 && blanksAllowed))
+                    if (mark == player || (mark == 0 && blankCount <= blanksAllowed))
                     {
-                        if (mark == 0) blanksAllowed = false;
+                        if (mark == 0) blankCount++;
 
                         group.Coords.Add(new Position(row, col, mark));
                         count++;
@@ -258,21 +267,26 @@ namespace Connect4AI
                             if (tempCol < 0 || tempRow < 0)
                             {
                                 count = 0;
-                                blanksAllowed = searchForThreats;
+                                blankCount = 0;
                                 group = new Group();
                                 break;
                             }
 
                             var tempMark = board[tempRow, tempCol];
-                            if (tempMark == player || (blanksAllowed && tempMark == 0))
+                            if (tempMark == player || (blankCount <= blanksAllowed && tempMark == 0))
                             {
                                 group.Coords.Add(new Position(tempRow, tempCol, tempMark));
                                 count++;
+
+                                if(tempMark == 0)
+                                {
+                                    blankCount++;
+                                }
                             }
                             else
                             {
                                 count = 0;
-                                blanksAllowed = searchForThreats;
+                                blankCount = 0;
                                 group = new Group();
                                 break;
                             }
@@ -280,20 +294,21 @@ namespace Connect4AI
                             if (count == NumToWin)
                             {
                                 results.Add(group);
+                                blankCount = 0 ;
+                                group = new Group();
+                                count = 0;
+                                break;
                             }
                         }
                     }
                     else
                     {
                         count = 0;
-                        blanksAllowed = searchForThreats;
+                        blankCount = 0;
                         group = new Group();
                     }
 
-                    if (count == NumToWin)
-                    {
-                        results.Add(group);
-                    }
+                   
                 }
             }
 
