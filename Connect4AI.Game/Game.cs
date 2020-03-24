@@ -1,6 +1,7 @@
 ﻿using GameGenerator;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -18,74 +19,116 @@ namespace Connect4AI.Game
         {
             this.board = new Board(numberOfColumns, numberOfRows);
             this.rules = new Rules(numberToWin);
+            this.numberToWin = numberToWin;
+        }
+
+     
+
+        private const string LeftSideBuffer = "          ";
+        private readonly int numberToWin;
+        private int PlayerTurn = 1;
+        private Player2Strategy player2 = new Player2Strategy();
+        private string filePath;
+
+
+        public bool Replay(string filePath)
+        {
+
+            GameLog log = GameLog.Load(filePath);
+
+            foreach(var entry in log.Log)
+            {
+                board.Matrix = entry.BoardBeforeMove;
+
+                var nextStep = false;
+                var startNewGame = false;
+                while (!nextStep)
+                {
+                    nextStep = RunEntry(entry, out startNewGame);
+                }
+
+                if (startNewGame)
+                {
+                    return true;
+                }
+
+                EndTurn(new GameLogEntry(), entry.ColumnPlayed);
+            }
+
+            
+            return false;
 
         }
 
-        private const string LeftSideBuffer = "          ";
+        private bool RunEntry(GameLogEntry entry, out bool startNewGame)
+        {
+            startNewGame = false;
+            DrawBoard();
+            Console.WriteLine();
+            Console.ForegroundColor = PlayerTurn == 1 ? ConsoleColor.Blue : ConsoleColor.Red;
+            Console.WriteLine($"Player {PlayerTurn} plays {entry.ColumnPlayed + 1}. (N)ext Move, (S)tart game here, (R)un stratgey?");
+            Console.ResetColor();
+            var key = Console.ReadKey();
 
-        private int PlayerTurn = 1;
-        private Player2Strategy player2 = new Player2Strategy();
+            if (key.Key == ConsoleKey.N)
+            {
+                return true;
+            }
+            else if (key.Key == ConsoleKey.S)
+            {
+                startNewGame = true;
+                return false;
+            }
+            else if (key.Key == ConsoleKey.R)
+            {
+                var strategy = new Player2Strategy();
+                var column = strategy.Run(board, numberToWin);
+                Console.WriteLine();
+                Console.WriteLine($"Strategy chose {column}.");
+                Console.ReadLine();
+                return false;
+            }
+
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.WriteLine();
+            Console.WriteLine($"Invalid column. Press any key");
+            Console.ReadLine();
+            return false;
+        }
 
         public bool Play()
         {
-            var logEntry = new GameLogEntry();
-            logEntry.BoardBeforeMove = (int[,])board.Matrix.Clone();
-            logEntry.PlayerNumber = PlayerTurn;
+            GameLogEntry logEntry = NewLogEntry();
 
             DrawBoard();
 
             int column = -1;
 
-
             if (PlayerTurn == 1)
             {
-                var promptColor = ConsoleColor.Blue ;
-                Console.ForegroundColor = promptColor;
-                Console.Write($"Select a column Player {PlayerTurn}: ");
-                Console.ResetColor();
+                ConsoleKeyInfo key;
+                string keyString;
+                Prompt(out key, out keyString);
 
-                var key = Console.ReadKey();
-                var keyString = key.KeyChar.ToString();
                 if (!int.TryParse(keyString, out column))
                 {
-
-                    if(key.Key == ConsoleKey.S)
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("Enter Name to Save: ");
-                        var name = Console.ReadLine();
-                        board.Name = name;
-                        BoardJson.Serialize(board);
-                        return true;
-                    }
-
-                    if (key.Key == ConsoleKey.L)
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("Enter Name to Load: ");
-                        var name = Console.ReadLine();
-                        board.Name = name;
-                        board = BoardJson.Deserialize(name);
-                        return true;
-                    }
-
-
-                    Console.BackgroundColor = ConsoleColor.Red;
-                    Console.WriteLine();
-                    Console.WriteLine($"Invalid column. Press any key");
-                    Console.ReadLine();
-                    return true;
+                    return HandleNonColumnInput(key);
                 }
+
                 column = column - 1;
-         
+
             }
             else
             {
                 column = player2.Run(board, 4);
-                
+
             }
-         
-           
+
+            return EndTurn(logEntry, column);
+        }
+
+        private bool EndTurn(GameLogEntry logEntry, int column)
+        {
             if (rules.IsValidMove(column, board))
             {
                 board.DropChecker(column, PlayerTurn);
@@ -112,10 +155,59 @@ namespace Connect4AI.Game
                 Console.ReadLine();
                 return true;
             }
-            
+
 
             PlayerTurn = PlayerTurn == 1 ? 2 : 1;
-            return true;  
+            return true;
+        }
+
+        private GameLogEntry NewLogEntry()
+        {
+            var logEntry = new GameLogEntry();
+            logEntry.BoardBeforeMove = (int[,])board.Matrix.Clone();
+            logEntry.PlayerNumber = PlayerTurn;
+            return logEntry;
+        }
+
+        private void Prompt(out ConsoleKeyInfo key, out string keyString)
+        {
+            var promptColor = ConsoleColor.Blue;
+            Console.ForegroundColor = promptColor;
+            Console.Write($"Select a column Player {PlayerTurn}: ");
+            Console.ResetColor();
+
+            key = Console.ReadKey();
+            keyString = key.KeyChar.ToString();
+        }
+
+        private bool HandleNonColumnInput(ConsoleKeyInfo key)
+        {
+            if (key.Key == ConsoleKey.S)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Enter Name to Save: ");
+                var name = Console.ReadLine();
+                board.Name = name;
+                BoardJson.Serialize(board);
+                return true;
+            }
+
+            if (key.Key == ConsoleKey.L)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Enter Name to Load: ");
+                var name = Console.ReadLine();
+                board.Name = name;
+                board = BoardJson.Deserialize(name);
+                return true;
+            }
+
+
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.WriteLine();
+            Console.WriteLine($"Invalid column. Press any key");
+            Console.ReadLine();
+            return true;
         }
 
         private void DrawBoard()
