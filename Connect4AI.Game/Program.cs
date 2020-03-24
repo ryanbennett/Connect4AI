@@ -31,7 +31,6 @@ namespace Connect4AI.Game
                     {
                         PlayGame(game);
                     }
-     
 
                 }
             }

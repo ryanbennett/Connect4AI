@@ -27,7 +27,7 @@ namespace Connect4AI.Game
         private const string LeftSideBuffer = "          ";
         private readonly int numberToWin;
         private int PlayerTurn = 1;
-        private Player2Strategy player2 = new Player2Strategy();
+
         private string filePath;
 
 
@@ -81,8 +81,8 @@ namespace Connect4AI.Game
             }
             else if (key.Key == ConsoleKey.R)
             {
-                var strategy = new Player2Strategy();
-                var column = strategy.Run(board, numberToWin);
+                var strategy = new MinMaxStrategy();
+                var column = strategy.Run(board, numberToWin, PlayerTurn);
                 Console.WriteLine();
                 Console.WriteLine($"Strategy chose {column}.");
                 Console.ReadLine();
@@ -120,8 +120,8 @@ namespace Connect4AI.Game
             }
             else
             {
-                column = player2.Run(board, 4);
-
+                var strategy = new MinMaxStrategy();
+                column = strategy.Run(board, numberToWin, PlayerTurn);
             }
 
             return EndTurn(logEntry, column);

@@ -6,15 +6,15 @@ using System.Text;
 
 namespace GameGenerator
 {
-    public class Player2Strategy
+    public class PlayerStrategy
     {
 
         private Random random = new Random();
 
-        private const int PLAYERNUM = 2;
-        public int Run(Board board, int numToWin)
+        private int PLAYERNUM = 2;
+        public int Run(Board board, int numToWin, int playerNumber = 2)
         {
-
+            PLAYERNUM = playerNumber;
             var search = new BoardSearch(numToWin);
 
             var legalMoves = search.FindAllLegalMoves(board);
