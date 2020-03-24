@@ -22,7 +22,8 @@ namespace Connect4AI.Game
             this.numberToWin = numberToWin;
         }
 
-     
+        MinMaxStrategy strategy1 = new MinMaxStrategy();
+        MinMaxStrategy strategy2 = new MinMaxStrategy();
 
         private const string LeftSideBuffer = "          ";
         private readonly int numberToWin;
@@ -120,15 +121,86 @@ namespace Connect4AI.Game
             }
             else
             {
-                var strategy = new MinMaxStrategy();
+                var strategy = PlayerTurn == 1 ? strategy1 : strategy2;
                 column = strategy.Run(board, numberToWin, PlayerTurn);
             }
 
             return EndTurn(logEntry, column);
         }
 
+        public bool PlayAutomated(bool pauseOnTurn)
+        {
+            var random = new Random();
+            var randomChance = random.Next(10);
+
+            GameLogEntry logEntry = NewLogEntry();
+
+            DrawBoard();
+
+            int column = -1;
+
+            var boardSearch = new BoardSearch(numberToWin);
+            var legalMoves = boardSearch.FindAllLegalMoves(board);
+
+            if (legalMoves.Count == 0)
+            {
+                return EndTurn(logEntry, -1);
+            }
+
+            if (boardSearch.IsBoardEmpty(board) && randomChance != 5)
+            {
+                column = 3;
+            }
+            else if(boardSearch.IsBoardEmpty(board) && randomChance == 5)
+            {
+                Console.WriteLine("Random move. ");
+                column = random.Next(5);
+            }
+            else
+            {
+                var strategy = PlayerTurn == 1 ? strategy1 : strategy2;
+
+                if(PlayerTurn == 1 && randomChance == 5)
+                {
+                    Console.WriteLine("Random move. ");
+                   
+                    column = legalMoves[random.Next(legalMoves.Count - 1)].Col;
+                }
+                else
+                {
+
+                    column = strategy.Run(board, numberToWin, PlayerTurn);
+                }
+               
+            }
+
+            Console.WriteLine();
+            Console.ForegroundColor = PlayerTurn == 1 ? ConsoleColor.Blue : ConsoleColor.Red;
+            Console.WriteLine($"Player {PlayerTurn} plays {column + 1}.");
+            if (pauseOnTurn)
+            {
+                Console.ReadKey();
+            }
+       
+            Console.ResetColor();
+
+            return EndTurn(logEntry, column);
+        }
+
         private bool EndTurn(GameLogEntry logEntry, int column)
         {
+
+            if(column == -1)
+            {
+                DrawBoard();
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.BackgroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Draw!");
+                Console.ReadLine();
+                return false;
+            }
+
             if (rules.IsValidMove(column, board))
             {
                 board.DropChecker(column, PlayerTurn);
@@ -138,10 +210,10 @@ namespace Connect4AI.Game
                 var winningGroups = rules.PlayerWins(PlayerTurn, board);
                 if (winningGroups.Any())
                 {
+                    DrawBoard();
                     Console.WriteLine();
                     Console.WriteLine();
                     Console.BackgroundColor = ConsoleColor.Green;
-                    DrawBoard();
                     Console.WriteLine($"Player {PlayerTurn} wins!");
                     Console.ReadLine();
                     return false;
@@ -153,6 +225,7 @@ namespace Connect4AI.Game
                 Console.WriteLine();
                 Console.WriteLine($"Invalid move. Press any key");
                 Console.ReadLine();
+                
                 return true;
             }
 

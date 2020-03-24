@@ -14,6 +14,19 @@ namespace Connect4AI
             NumToWin = numToWin;
         }
 
+        public bool IsBoardEmpty(Board board)
+        {
+            var result = true;
+            for(var c =0;c<board.MAX_COL_INDEX+1; c++)
+            {
+                var col = board.GetColumn(c);
+                result = col.All(m => m == 0);
+                if (!result) return result;
+            }
+
+            return result;
+        }
+
         public List<Group> FindGroups(int player, Board board, int blanksAllowed = 0)
         {
 

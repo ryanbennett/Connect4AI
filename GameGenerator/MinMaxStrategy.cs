@@ -11,23 +11,24 @@ namespace GameGenerator
 {
     public class MinMaxStrategy
     {
+        private SearchEngine searchEngine = new SearchEngine()
+        {
+            MaxDegreeOfParallelism = 1,
+            MaxLevelOfParallelism = 1,
+            DieEarly = false,
+            MinScore = BoardEvaluator.MinEvaluation,
+            MaxScore = BoardEvaluator.MaxEvaluation,
+            ParallelismMode = ParallelismMode.NonParallelism,
+            SkipEvaluationForFirstNodeSingleNeighbor = false,
+            CacheMode = CacheMode.NewCache,
+            StateDefinesDepth = true
+        };
+
         public int Run(Board board, int numToWin, int playerNumber)
         {
-            var searchEngine = new SearchEngine()
-            {
-                MaxDegreeOfParallelism = 1,
-                MaxLevelOfParallelism = 1,
-                DieEarly = true,
-                MinScore = BoardEvaluator.MinEvaluation,
-                MaxScore = BoardEvaluator.MaxEvaluation,
-                ParallelismMode = ParallelismMode.NonParallelism,
-                SkipEvaluationForFirstNodeSingleNeighbor = false,
-                CacheMode = CacheMode.NewCache,
-                StateDefinesDepth = true
-            };
+          
 
             BoardSearch boardSearch = new BoardSearch(numToWin);
-            var legalMoves = boardSearch.FindAllLegalMoves(board);
 
 
 
@@ -39,7 +40,7 @@ namespace GameGenerator
             Player[,] boardState = BoardToPlayerBoard(boardToEvaluate, playerNumber);
 
             Connect4State state = new Connect4State(boardState, (Player)playerNumber);
-            var searchResult = searchEngine.Search(state, 7);
+            var searchResult = searchEngine.Search(state, 9);
             var newBoard = (Connect4State)searchResult.NextMove;
 
             var columnToPlay = -1;

@@ -10,7 +10,7 @@ namespace Connect4AI.Game
         static void Main(string[] args)
         {
 
-            Console.WriteLine("(P)lay or (L)oad game? ");
+            Console.WriteLine("(A)utomate, (P)lay or (L)oad game? ");
             var key = Console.ReadKey();
             var filePath = string.Empty;
 
@@ -34,9 +34,29 @@ namespace Connect4AI.Game
 
                 }
             }
-            else
+            else if(key.Key == ConsoleKey.P)
             {
                 PlayGame(new Game());
+
+            }
+
+            else if(key.Key == ConsoleKey.A)
+            {
+                Console.WriteLine();
+                Console.WriteLine("How many games? ");
+                var games = int.Parse(Console.ReadLine());
+                PlayAutoGame(games);
+            }
+        }
+
+        private static void PlayAutoGame(int games)
+        {
+            for(var i=0; i<games; i++)
+            {
+                var game = new Game();
+
+                while (game.PlayAutomated(true)) { };
+                game.log.Save();
 
             }
         }
@@ -52,5 +72,7 @@ namespace Connect4AI.Game
 
             game.log.Save();
         }
+
+
     }
 }
