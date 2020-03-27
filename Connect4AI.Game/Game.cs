@@ -134,8 +134,6 @@ namespace Connect4AI.Game
 
             GameLogEntry logEntry = NewLogEntry();
 
-            DrawBoard();
-
             int column = -1;
 
             var boardSearch = new BoardSearch(numberToWin);
@@ -149,7 +147,7 @@ namespace Connect4AI.Game
             if (boardSearch.IsBoardEmpty(board))
             {
             
-                Console.WriteLine("Random move. ");
+                //Console.WriteLine("Random move. ");
                 column = random.Next(6);
             }
             else
@@ -158,7 +156,7 @@ namespace Connect4AI.Game
 
                 if(PlayerTurn == 1 && randomChance <= 5)
                 {
-                    Console.WriteLine("Random move. ");
+                    //Console.WriteLine("Random move. ");
                    
                     column = legalMoves[random.Next(legalMoves.Count - 1)].Col;
                 }
@@ -170,29 +168,33 @@ namespace Connect4AI.Game
                
             }
 
-            Console.WriteLine();
-            Console.ForegroundColor = PlayerTurn == 1 ? ConsoleColor.Blue : ConsoleColor.Red;
-            Console.WriteLine($"Player {PlayerTurn} plays {column + 1}.");
-            if (pauseOnTurn)
-            {
-                Console.ReadKey();
-            }
+            //Console.WriteLine();
+            //Console.ForegroundColor = PlayerTurn == 1 ? ConsoleColor.Blue : ConsoleColor.Red;
+            //Console.WriteLine($"Player {PlayerTurn} plays {column + 1}.");
+            //if (pauseOnTurn)
+            //{
+            //    Console.ReadKey();
+            //}
        
-            Console.ResetColor();
+            //Console.ResetColor();
 
-            return EndTurn(logEntry, column,pauseOnTurn);
+            return EndTurn(logEntry, column,pauseOnTurn,false);
         }
 
-        private bool EndTurn(GameLogEntry logEntry, int column, bool pause = true)
+        private bool EndTurn(GameLogEntry logEntry, int column, bool pause = true, bool drawBoard = true)
         {
 
             if(column == -1)
             {
-                DrawBoard();
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.BackgroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Draw!");
+                if (drawBoard)
+                {
+                    DrawBoard();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.BackgroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"Draw!");
+                }
+             
                 log.Winner = 0;
                 if(pause)
                     Console.ReadLine();
@@ -209,11 +211,14 @@ namespace Connect4AI.Game
                 var winningGroups = rules.PlayerWins(PlayerTurn, board);
                 if (winningGroups.Any())
                 {
-                    DrawBoard();
-                    Console.WriteLine();
-                    Console.WriteLine();
-                    Console.BackgroundColor = PlayerTurn == 1 ? ConsoleColor.Blue : ConsoleColor.Red;
-                    Console.WriteLine($"Player {PlayerTurn} wins!");
+                    if (drawBoard)
+                    {
+                        DrawBoard();
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        Console.BackgroundColor = PlayerTurn == 1 ? ConsoleColor.Blue : ConsoleColor.Red;
+                        Console.WriteLine($"Player {PlayerTurn} wins!");
+                    }
                     log.Winner = PlayerTurn;
                     if (pause)
                         Console.ReadLine();
@@ -223,9 +228,12 @@ namespace Connect4AI.Game
             }
             else
             {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine();
-                Console.WriteLine($"Invalid move. Press any key");
+                if (drawBoard)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine();
+                    Console.WriteLine($"Invalid move. Press any key");
+                }
 
                 if (pause)
                     Console.ReadLine();

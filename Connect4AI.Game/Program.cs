@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Connect4AI.Game
@@ -58,14 +60,28 @@ namespace Connect4AI.Game
 
         private static void PlayAutoGame(int games)
         {
-            for(var i=0; i<games; i++)
+            Console.Clear();
+
+            var options = new ParallelOptions()
             {
+                MaxDegreeOfParallelism = 2
+            };
+
+            //Parallel.For(0, games, options,(i) =>
+            //  {
+
+            for (var i = 0; i < games; i++)
+            {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
                 var game = new Game();
 
                 while (game.PlayAutomated(false)) { };
                 game.log.Save();
-
+                sw.Stop();
+                Console.WriteLine(i + ": " + sw.Elapsed);
             }
+              //});
         }
 
         private static void PlayGame(Game game, bool twoPlayer = false)

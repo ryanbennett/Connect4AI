@@ -14,8 +14,7 @@ namespace GameGenerator
     {
         private SearchEngine searchEngine = new SearchEngine()
         {
-            MaxDegreeOfParallelism = 4,
-            MaxLevelOfParallelism = 2,
+            MaxDegreeOfParallelism = 8,
             DieEarly = false,
             MinScore = BoardEvaluator.MinEvaluation,
             MaxScore = BoardEvaluator.MaxEvaluation,
@@ -43,7 +42,7 @@ namespace GameGenerator
             Connect4State state = new Connect4State(boardState, (Player)playerNumber);
             try
             {
-                var searchResult = searchEngine.Search(state, 9);
+                var searchResult = searchEngine.Search(state, 8);
                 var newBoard = (Connect4State)searchResult.NextMove;
 
                 

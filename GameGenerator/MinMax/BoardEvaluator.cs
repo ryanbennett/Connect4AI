@@ -20,9 +20,9 @@ namespace GameGenerator.MinMax
 
         private static bool IsWinInDirection(Player[,] board, int direction1, int direction2, Player player)
         {
-            for (int i = 0; i < Connect4State.RowCount; i++)
-                for (int j = 0; j < Connect4State.ColCount; j++)
-                    if (PiecesInRow(board, i, j, direction1, direction2, player) == 4)
+            for (int row = 0; row < Connect4State.RowCount; row++)
+                for (int col = 0; col < Connect4State.ColCount; col++)
+                    if (PiecesInRow(board, row, col, direction1, direction2, player) == 4)
                         return true;
 
             return false;
@@ -50,10 +50,10 @@ namespace GameGenerator.MinMax
         private static int EvaluateDirection(Player[,] board, int direction1, int direction2, Player player)
         {
             var sum = 0;
-            for (int i = 0; i < 6; i++)
-                for (int j = 0; j < 7; j++)
+            for (int row = 0; row < Connect4State.RowCount; row++)
+                for (int col = 0; col < Connect4State.ColCount; col++)
                 {
-                    var piecesInRow = PiecesInRow(board, i, j, direction1, direction2, player);
+                    var piecesInRow = PiecesInRow(board, row, col, direction1, direction2, player);
                     if (piecesInRow == 4)
                         return MaxEvaluation;
                     if (piecesInRow == 3)
@@ -69,16 +69,16 @@ namespace GameGenerator.MinMax
         private static int PiecesInRow(Player[,] board, int startX, int startY, int direction1, int direction2, Player player)
         {
             var pieces = 0;
-            for (int i = 0; i < 4; i++)
+            for (int piecesInARow = 0; piecesInARow < 4; piecesInARow++)
             {
                 // out of range
-                if (startX + i * direction1 >= Connect4State.RowCount || startY + i * direction2 >= Connect4State.ColCount)
+                if (startX + piecesInARow * direction1 >= Connect4State.RowCount || startY + piecesInARow * direction2 >= Connect4State.ColCount)
                     return 0;
-                if (startX + i * direction1 < 0 || startY + i * direction2 < 0)
+                if (startX + piecesInARow * direction1 < 0 || startY + piecesInARow * direction2 < 0)
                     return 0;
-                if (board[startX + i * direction1, startY + i * direction2] == player)
+                if (board[startX + piecesInARow * direction1, startY + piecesInARow * direction2] == player)
                     pieces++;
-                else if (board[startX + i * direction1, startY + i * direction2] != Player.Empty)
+                else if (board[startX + piecesInARow * direction1, startY + piecesInARow * direction2] != Player.Empty)
                     return 0;
             }
 

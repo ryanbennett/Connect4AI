@@ -26,9 +26,9 @@ namespace GameGenerator.MinMax
                     return new List<IDeterministicState>();
 
                 var result = new List<Connect4State>();
-                for (int i = 0; i < ColCount; i++)
+                for (int col = 0; col < ColCount; col++)
                 {
-                    var newState = AddPieceTo(i);
+                    var newState = AddPieceTo(col);
                     if (newState != null)
                         result.Add(newState);
                 }
@@ -39,13 +39,13 @@ namespace GameGenerator.MinMax
             public double Evaluate(int depth, List<IState> passedThroughStates) =>
                 BoardEvaluator.Evaluate(Board);
 
-            public Connect4State AddPieceTo(int i)
+            public Connect4State AddPieceTo(int col)
             {
                 var newBoard = (Player[,])Board.Clone();
-                for (int j = 0; j < ColCount; j++)
-                    if (newBoard[i,j] == Player.Empty)
+                for (int row = 0; row < RowCount; row++)
+                    if (newBoard[row,col] == Player.Empty)
                     {
-                        newBoard[i,j] = Turn;
+                        newBoard[row,col] = Turn;
                         return new Connect4State(newBoard, Turn.GetReversePlayer());
                     }
 
@@ -60,9 +60,9 @@ namespace GameGenerator.MinMax
                 if (Turn != connect4State.Turn)
                     return false;
 
-                for (var i = 0; i < RowCount; i++)
-                    for (var j = 0; j < ColCount; j++)
-                        if (Board[i, j] != connect4State.Board[i, j])
+                for (var row = 0; row < RowCount; row++)
+                    for (var col = 0; col < ColCount; col++)
+                        if (Board[row, col] != connect4State.Board[row, col])
                             return false;
 
                 return true;
@@ -72,9 +72,9 @@ namespace GameGenerator.MinMax
             {
                 int sum = 0;
 
-                for (var i = 0; i <RowCount; i++)
-                    for (var j = 0; j < ColCount; j++)
-                        sum += GetValue(Board[i, j]) * (int)Math.Pow(3, i + j);
+                for (var row = 0; row <RowCount; row++)
+                    for (var col = 0; col < ColCount; col++)
+                        sum += GetValue(Board[row, col]) * (int)Math.Pow(3, row + col);
 
                 return sum + (int)Turn * (int)Math.Pow(3, RowCount* ColCount);
             }
@@ -96,10 +96,10 @@ namespace GameGenerator.MinMax
             {
                 var builder = new StringBuilder();
 
-                for (int i = 0; i < RowCount; i++)
+                for (int row = 0; row < RowCount; row++)
                 {
-                    for (int j = 0; j < ColCount; j++)
-                        builder.Append(GetValue(Board[i, j]) + " ");
+                    for (int col = 0; col < ColCount; col++)
+                        builder.Append(GetValue(Board[row, col]) + " ");
                     builder.Append("#" + Environment.NewLine);
                 }
 
