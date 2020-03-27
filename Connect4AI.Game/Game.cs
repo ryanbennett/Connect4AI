@@ -97,7 +97,7 @@ namespace Connect4AI.Game
             return false;
         }
 
-        public bool Play()
+        public bool Play(bool twoPlayer)
         {
             GameLogEntry logEntry = NewLogEntry();
 
@@ -105,7 +105,7 @@ namespace Connect4AI.Game
 
             int column = -1;
 
-            if (PlayerTurn == 1)
+            if (PlayerTurn == 1 || twoPlayer)
             {
                 ConsoleKeyInfo key;
                 string keyString;
@@ -121,8 +121,7 @@ namespace Connect4AI.Game
             }
             else
             {
-                var strategy = PlayerTurn == 1 ? strategy1 : strategy2;
-                column = strategy.Run(board, numberToWin, PlayerTurn);
+                column = strategy2.Run(board, numberToWin, PlayerTurn);
             }
 
             return EndTurn(logEntry, column);
@@ -144,23 +143,20 @@ namespace Connect4AI.Game
 
             if (legalMoves.Count == 0)
             {
-                return EndTurn(logEntry, -1);
+                return EndTurn(logEntry, -1,pauseOnTurn);
             }
 
-            if (boardSearch.IsBoardEmpty(board) && randomChance != 5)
+            if (boardSearch.IsBoardEmpty(board))
             {
-                column = 3;
-            }
-            else if(boardSearch.IsBoardEmpty(board) && randomChance == 5)
-            {
+            
                 Console.WriteLine("Random move. ");
-                column = random.Next(5);
+                column = random.Next(6);
             }
             else
             {
                 var strategy = PlayerTurn == 1 ? strategy1 : strategy2;
 
-                if(PlayerTurn == 1 && randomChance == 5)
+                if(PlayerTurn == 1 && randomChance <= 5)
                 {
                     Console.WriteLine("Random move. ");
                    
@@ -184,10 +180,10 @@ namespace Connect4AI.Game
        
             Console.ResetColor();
 
-            return EndTurn(logEntry, column);
+            return EndTurn(logEntry, column,pauseOnTurn);
         }
 
-        private bool EndTurn(GameLogEntry logEntry, int column)
+        private bool EndTurn(GameLogEntry logEntry, int column, bool pause = true)
         {
 
             if(column == -1)
@@ -197,7 +193,10 @@ namespace Connect4AI.Game
                 Console.WriteLine();
                 Console.BackgroundColor = ConsoleColor.Green;
                 Console.WriteLine($"Draw!");
-                Console.ReadLine();
+                log.Winner = 0;
+                if(pause)
+                    Console.ReadLine();
+
                 return false;
             }
 
@@ -213,9 +212,12 @@ namespace Connect4AI.Game
                     DrawBoard();
                     Console.WriteLine();
                     Console.WriteLine();
-                    Console.BackgroundColor = ConsoleColor.Green;
+                    Console.BackgroundColor = PlayerTurn == 1 ? ConsoleColor.Blue : ConsoleColor.Red;
                     Console.WriteLine($"Player {PlayerTurn} wins!");
-                    Console.ReadLine();
+                    log.Winner = PlayerTurn;
+                    if (pause)
+                        Console.ReadLine();
+
                     return false;
                 }
             }
@@ -224,7 +226,9 @@ namespace Connect4AI.Game
                 Console.BackgroundColor = ConsoleColor.Red;
                 Console.WriteLine();
                 Console.WriteLine($"Invalid move. Press any key");
-                Console.ReadLine();
+
+                if (pause)
+                    Console.ReadLine();
                 
                 return true;
             }

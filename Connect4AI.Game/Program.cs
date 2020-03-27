@@ -36,7 +36,14 @@ namespace Connect4AI.Game
             }
             else if(key.Key == ConsoleKey.P)
             {
-                PlayGame(new Game());
+
+                Console.WriteLine();
+                Console.WriteLine("(1) or (2) players?");
+                key = Console.ReadKey();
+
+                var twoPlayer = key.Key == ConsoleKey.D1 ? false : true;
+
+                PlayGame(new Game(),twoPlayer);
 
             }
 
@@ -55,19 +62,19 @@ namespace Connect4AI.Game
             {
                 var game = new Game();
 
-                while (game.PlayAutomated(true)) { };
+                while (game.PlayAutomated(false)) { };
                 game.log.Save();
 
             }
         }
 
-        private static void PlayGame(Game game)
+        private static void PlayGame(Game game, bool twoPlayer = false)
         {
             
-            var result = game.Play();
+            var result = game.Play(twoPlayer);
             while (result)
             {
-                result = game.Play();
+                result = game.Play(twoPlayer);
             }
 
             game.log.Save();

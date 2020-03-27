@@ -6,6 +6,7 @@ using Connect4AI;
 using GameGenerator.MinMax;
 using MinMaxSearch;
 using MinMaxSearch.Cache;
+using MinMaxSearch.Exceptions;
 
 namespace GameGenerator
 {
@@ -13,14 +14,14 @@ namespace GameGenerator
     {
         private SearchEngine searchEngine = new SearchEngine()
         {
-            MaxDegreeOfParallelism = 1,
-            MaxLevelOfParallelism = 1,
+            MaxDegreeOfParallelism = 4,
+            MaxLevelOfParallelism = 2,
             DieEarly = false,
             MinScore = BoardEvaluator.MinEvaluation,
             MaxScore = BoardEvaluator.MaxEvaluation,
-            ParallelismMode = ParallelismMode.NonParallelism,
+            ParallelismMode = ParallelismMode.TotalParallelism,
             SkipEvaluationForFirstNodeSingleNeighbor = false,
-            CacheMode = CacheMode.NewCache,
+            CacheMode = CacheMode.ReuseCache,
             StateDefinesDepth = true
         };
 
@@ -38,24 +39,33 @@ namespace GameGenerator
 
 
             Player[,] boardState = BoardToPlayerBoard(boardToEvaluate, playerNumber);
-
-            Connect4State state = new Connect4State(boardState, (Player)playerNumber);
-            var searchResult = searchEngine.Search(state, 9);
-            var newBoard = (Connect4State)searchResult.NextMove;
-
             var columnToPlay = -1;
-            for (var r = 0; r <= board.MAX_ROW_INDEX; r++)
+            Connect4State state = new Connect4State(boardState, (Player)playerNumber);
+            try
             {
-                for (var c = 0; c <= board.MAX_COL_INDEX; c++)
-                {
-                    var value = boardState[r, c];
-                    var newValue = newBoard.Board[r, c];
+                var searchResult = searchEngine.Search(state, 9);
+                var newBoard = (Connect4State)searchResult.NextMove;
 
-                    if (value != newValue)
+                
+                for (var r = 0; r <= board.MAX_ROW_INDEX; r++)
+                {
+                    for (var c = 0; c <= board.MAX_COL_INDEX; c++)
                     {
-                        columnToPlay = c;
+                        var value = boardState[r, c];
+                        var newValue = newBoard.Board[r, c];
+
+                        if (value != newValue)
+                        {
+                            columnToPlay = c;
+                        }
                     }
                 }
+            }
+            catch(NoNeighborsException e)
+            {
+                var legalMoves = boardSearch.FindAllLegalMoves(boardToEvaluate);
+                Random rand = new Random();
+                columnToPlay = legalMoves[rand.Next(legalMoves.Count - 1)].Col;
             }
 
             return columnToPlay;

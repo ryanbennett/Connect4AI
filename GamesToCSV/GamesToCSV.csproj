@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Connect4AI.Game\Connect4AI.Game.csproj" />
+    <ProjectReference Include="..\Connect4AI\Connect4AI.csproj" />
+  </ItemGroup>
+
+</Project>

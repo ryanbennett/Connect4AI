@@ -20,8 +20,8 @@ namespace GameGenerator.MinMax
 
         private static bool IsWinInDirection(Player[,] board, int direction1, int direction2, Player player)
         {
-            for (int i = 0; i < Connect4State.BoardSize; i++)
-                for (int j = 0; j < Connect4State.BoardSize; j++)
+            for (int i = 0; i < Connect4State.RowCount; i++)
+                for (int j = 0; j < Connect4State.ColCount; j++)
                     if (PiecesInRow(board, i, j, direction1, direction2, player) == 4)
                         return true;
 
@@ -50,8 +50,8 @@ namespace GameGenerator.MinMax
         private static int EvaluateDirection(Player[,] board, int direction1, int direction2, Player player)
         {
             var sum = 0;
-            for (int i = 0; i < Connect4State.BoardSize; i++)
-                for (int j = 0; j < Connect4State.BoardSize; j++)
+            for (int i = 0; i < 6; i++)
+                for (int j = 0; j < 7; j++)
                 {
                     var piecesInRow = PiecesInRow(board, i, j, direction1, direction2, player);
                     if (piecesInRow == 4)
@@ -72,7 +72,7 @@ namespace GameGenerator.MinMax
             for (int i = 0; i < 4; i++)
             {
                 // out of range
-                if (startX + i * direction1 >= Connect4State.BoardSize || startY + i * direction2 >= Connect4State.BoardSize)
+                if (startX + i * direction1 >= Connect4State.RowCount || startY + i * direction2 >= Connect4State.ColCount)
                     return 0;
                 if (startX + i * direction1 < 0 || startY + i * direction2 < 0)
                     return 0;
