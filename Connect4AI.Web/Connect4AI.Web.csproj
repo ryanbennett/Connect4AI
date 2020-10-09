@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\main.css" />
+    <None Include="wwwroot\img\arrow-keys.svg" />
+    <None Include="wwwroot\index.html" />
+    <None Include="wwwroot\js\accessibility.js" />
+    <None Include="wwwroot\js\functions.js" />
+    <None Include="wwwroot\js\main.js" />
+    <None Include="wwwroot\js\vars.js" />
+  </ItemGroup>
+
+</Project>

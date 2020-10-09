@@ -11,7 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Connect4AI.Game", "Connect4
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "EntryScript", "EntryScript\EntryScript.pyproj", "{0B9FB393-A4A8-4015-89E0-2189A1B0F034}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamesToCSV", "GamesToCSV\GamesToCSV.csproj", "{8AC1E1D2-326E-433E-8961-BBC65D095AB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamesToCSV", "GamesToCSV\GamesToCSV.csproj", "{8AC1E1D2-326E-433E-8961-BBC65D095AB4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Connect4.Web", "Connect4.Web\Connect4.Web.csproj", "{59F78B97-D9AD-4D47-B87B-BD768F545ABC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connect4AI.WebJob", "Connect4AI.WebJob\Connect4AI.WebJob.csproj", "{B1FBBA7C-463C-4A8A-AE3E-C89B6644EBAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connect4AI.Core", "Connect4AI.Core\Connect4AI.Core.csproj", "{0D863845-EC55-4698-84CD-C10654E48459}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +43,18 @@ Global
 		{8AC1E1D2-326E-433E-8961-BBC65D095AB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AC1E1D2-326E-433E-8961-BBC65D095AB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AC1E1D2-326E-433E-8961-BBC65D095AB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59F78B97-D9AD-4D47-B87B-BD768F545ABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59F78B97-D9AD-4D47-B87B-BD768F545ABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59F78B97-D9AD-4D47-B87B-BD768F545ABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59F78B97-D9AD-4D47-B87B-BD768F545ABC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1FBBA7C-463C-4A8A-AE3E-C89B6644EBAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1FBBA7C-463C-4A8A-AE3E-C89B6644EBAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1FBBA7C-463C-4A8A-AE3E-C89B6644EBAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1FBBA7C-463C-4A8A-AE3E-C89B6644EBAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D863845-EC55-4698-84CD-C10654E48459}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D863845-EC55-4698-84CD-C10654E48459}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D863845-EC55-4698-84CD-C10654E48459}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D863845-EC55-4698-84CD-C10654E48459}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

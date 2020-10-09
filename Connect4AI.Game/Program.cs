@@ -3,8 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Connect4AI.Core;
 
-namespace Connect4AI.Game
+namespace Connect4AI.GameRunner
 {
     class Program
     {
@@ -26,7 +27,7 @@ namespace Connect4AI.Game
                 {
                     filePath = fbd.FileName;
 
-                    var game = new Game();
+                    var game = new Game(new GameLog());
                     var startNewGame = game.Replay(filePath);
 
                     if (startNewGame)
@@ -45,7 +46,7 @@ namespace Connect4AI.Game
 
                 var twoPlayer = key.Key == ConsoleKey.D1 ? false : true;
 
-                PlayGame(new Game(),twoPlayer);
+                PlayGame(new Game(new GameLog()),twoPlayer);
 
             }
 
@@ -62,26 +63,20 @@ namespace Connect4AI.Game
         {
             Console.Clear();
 
-            var options = new ParallelOptions()
-            {
-                MaxDegreeOfParallelism = 2
-            };
-
-            //Parallel.For(0, games, options,(i) =>
-            //  {
+  
 
             for (var i = 0; i < games; i++)
             {
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
-                var game = new Game();
+                var game = new Game(new GameLog());
 
                 while (game.PlayAutomated(false)) { };
                 game.log.Save();
                 sw.Stop();
                 Console.WriteLine(i + ": " + sw.Elapsed);
             }
-              //});
+            
         }
 
         private static void PlayGame(Game game, bool twoPlayer = false)

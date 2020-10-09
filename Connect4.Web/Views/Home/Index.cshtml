@@ -1,0 +1,112 @@
+﻿@{
+    ViewData["Title"] = "Connect 4 vs AI";
+}
+
+
+    <div class="keyboard-friendly">
+        <img class="keyboard-friendly-img" src="img/arrow-keys.svg" />
+    </div>
+    <section class="wrapper">
+        <div class="center">
+            <h1 class="title">Play Connect Four against </h1>
+            <select id="selectAI">
+                <option value="Random Forest" selected>Random Forest</option>
+                <option value="Neural Network">Neural Network</option>
+                <option value="Random Move">Random Move</option>
+            </select>
+            <div id="top-text" class="top-text">
+                <h2 class="primary">
+                    <span id="prefix">Current Player is: </span>
+                    <span id="current-player" contenteditable="true">Player 1</span>
+                </h2>
+                <h3 class="secondary">
+                    <span>Next up is: </span>
+                    <span id="other-player" contenteditable="true">Player 2</span>
+                </h3>
+                </h2>
+                <div id="play-again" class="play-again">
+                    <a href="#" class="play-again-btn" id="play-again-btn">Play Again</a>
+                </div>
+            </div>
+            <table id="board" class="board">
+                <tbody>
+                    <tr>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                        <td><button type="button"></button></td>
+                    </tr>
+                    <tr>
+                        <td><b id="col1"></b>%</td>
+                        <td><b id="col2"></b>%</td>
+                        <td><b id="col3"></b>%</td>
+                        <td><b id="col4"></b>%</td>
+                        <td><b id="col5"></b>%</td>
+                        <td><b id="col6"></b>%</td>
+                        <td><b id="col7"></b>%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="scores" style="text-align: center">
+                <div><b>Best play: </b><b id="best"></b></div> 
+            </div>
+
+            <a class="code" href="https://github.com/bryanbraun/connect-four">See the code</a>
+            </div>
+    </section>
+
+@section scripts{ 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" type="text/javascript"></script>
+    <script src="js/vars.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/main.js"></script>
+}

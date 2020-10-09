@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>0b9fb393-a4a8-4015-89e0-2189a1b0f034</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>EntryScript.py</StartupFile>
+    <StartupFile>deploy.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="deploy.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="EntryScript.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

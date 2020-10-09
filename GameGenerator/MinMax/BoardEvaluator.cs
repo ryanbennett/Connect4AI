@@ -22,8 +22,11 @@ namespace GameGenerator.MinMax
         {
             for (int row = 0; row < Connect4State.RowCount; row++)
                 for (int col = 0; col < Connect4State.ColCount; col++)
-                    if (PiecesInRow(board, row, col, direction1, direction2, player) == 4)
+                {
+                    var pir = PiecesInRow(board, row, col, direction1, direction2, player);
+                    if (pir == 4)
                         return true;
+                }
 
             return false;
         }
